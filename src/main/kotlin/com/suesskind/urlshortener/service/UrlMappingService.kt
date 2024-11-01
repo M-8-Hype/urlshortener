@@ -10,6 +10,9 @@ class UrlMappingService(
     private val urlMappingRepository: UrlMappingRepository
 ) {
     fun shortenUrl(originalUrl: String): String {
+        urlMappingRepository.findByOriginalUrl(originalUrl)?.let {
+            return it.shortUrl
+        }
         val shortUrl = UUID.randomUUID().toString().substring(0, 8)
         val urlMapping = UrlMapping(originalUrl = originalUrl, shortUrl = shortUrl)
         urlMappingRepository.save(urlMapping)
