@@ -48,4 +48,31 @@ class UrlMappingServiceTest {
         assertEquals(shortUrl, result)
         verify(exactly = 0) { uuidGenerator.invoke() }
     }
+
+    @Test
+    fun `getOriginalUrl - should return the original url`() {
+        val shortUrl = "ba31b9da"
+        val originalUrl = "https://dkbcodefactory.com/"
+
+        every { urlMappingRepository.findByShortUrl(shortUrl) } returns UrlMapping(id = null, originalUrl, shortUrl)
+
+        // when
+        val result = urlMappingService.getOriginalUrl(shortUrl)
+
+        // then
+        assertEquals(originalUrl, result)
+    }
+
+    @Test
+    fun `getOriginalUrl - should return null when short url not found`() {
+        val shortUrl = "ba31b9da"
+
+        every { urlMappingRepository.findByShortUrl(shortUrl) } returns null
+
+        // when
+        val result = urlMappingService.getOriginalUrl(shortUrl)
+
+        // then
+        assertEquals(null, result)
+    }
 }
